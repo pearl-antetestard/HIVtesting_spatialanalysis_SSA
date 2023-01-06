@@ -13,5 +13,6 @@
 ## Main R files
 
 ##### analysis_wealth.R: This calculates and maps the relative index of inequality and slope index of inequality.
+##### hivtest_ineq_fun_2.R: Function needed in analysis_wealth.R to calculate the RII and SII.
 ##### spatialanalysis2. R: This conducts spatial analysis of inequalities at the cluster level using the Getis-Ord G* statistics.
 
