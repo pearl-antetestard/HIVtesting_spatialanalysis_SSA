@@ -8,9 +8,10 @@
 ##### 4 Scripps Institution of Oceanography, University of California, San Diego, California, USA
 ##### 5 MRC Centre for Global Infectious Disease Analysis, Department of Infectious Disease Epidemiology, Imperial College London, United Kingdom
 
-#### Corresponding author: Pearl Anne Ante-Testard (pearlannemante@gmail.com/ pearl.ante@ucsf.edu)
+##### Corresponding author: Pearl Anne Ante-Testard (pearlannemante@gmail.com/ pearl.ante@ucsf.edu)
 
 ## Main R files
 
-##### spatialanalysis2. R
-##### analysis_wealth.R
+##### analysis_wealth.R: This calculates and maps the relative index of inequality and slope index of inequality.
+##### spatialanalysis2. R: This conducts spatial analysis of inequalities at the cluster level using the Getis-Ord G* statistics.
+
