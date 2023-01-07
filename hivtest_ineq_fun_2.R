@@ -17,7 +17,7 @@ h_ineq <- function(dat, var_soc, var_outcome, clust, full = F, scale = 1) {
     mutate(group := !!soc) %>%
     group_by(group) %>%
     summarise(indiv=n(), prop_w=indiv/nrow(dat), cases=sum(!!health), prop_cases=cases/indiv) %>%
-    mutate(cum_w=cumsum(indiv), pt=cum_w/sum(woman), cum_c=cumsum(cases), Lt=cum_c/sum(cases),
+    mutate(cum_w=cumsum(indiv), pt=cum_w/sum(indiv), cum_c=cumsum(cases), Lt=cum_c/sum(cases),
            con_i = (pt*lead(Lt, default=0))-(lead(pt, default=0)*Lt))
   
   # CI: FROM LOW TO HIGH SES =============================================
