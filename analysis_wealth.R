@@ -28,6 +28,7 @@ library(colorspace)
 library(scales)
 #library(rineq)
 
+# reading csv files
 gender = "female"
 gender = "male"
 gender = "all"
@@ -36,7 +37,6 @@ if(gender=="female"){
   dat <- read.csv(here("dat_mal_ineq_v3.csv")) %>%
     dplyr::filter(gender=="female") %>%
     dplyr::filter(country!="BF")
-    #dplyr::filter(country=="AO")
 } else if(gender=="male"){
   dat <- read.csv(here("dat_mal_ineq_v3.csv")) %>%
     dplyr::filter(gender=="male")%>%
@@ -46,8 +46,12 @@ if(gender=="female"){
     #dplyr::filter(gender=="male")
 }
 
-source(here("mal_ineq_fun_2.R"))
-
+# calling function to calculate RII and SII
+source(here("hivtest_ineq_fun_2.R"))
+  
+################
+  
+# recoding variables
 dat$w2=dat$w/1000000
 dat$wealthindex=fct_relevel(dat$wealthindex,c("poorest","poorer","middle","richer","richest"))
 
@@ -55,7 +59,9 @@ dat$wealthindex=fct_relevel(dat$wealthindex,c("poorest","poorer","middle","riche
 #dat$prev_reg = prev_val$x[match(dat$REGNAME, prev_val[,1] )]
 #dat$prev_reg=dat$prev_reg*100 
 
+################
 
+# preparing data
 if(gender=="female"){
   
   dat.n.f <- dat %>%
@@ -152,8 +158,9 @@ if(gender=="female"){
 
 }
 
-#h=readRDS(paste0("/Users/pearlanneante-testard/Dropbox/PhD/mapping/",gender,"tokevin.rds"))
+################
 
+# calculating RII and SII
 if(gender=="female"){
   
   dat_ci.f <- dat.n.f  %>%
@@ -199,12 +206,9 @@ if(gender=="female"){
     ungroup() 
 } 
 
-
-
-
-
-#### Distributions of Wealth 
-
+################
+  
+# distributions of wealth 
 
 dat_ci = dat_ci_f
 dat_ci = dat_ci_m
@@ -219,8 +223,9 @@ c <- bi_hist_ineq(dat_ci, var_x = prev, var_y = sample.size, lab_x = "Proportion
 ggsave(paste0("/Users/pearlanneante-testard/Dropbox/PhD/mapping/res/",gender,"_psu2",".jpg"),
        units = "cm", width = 30, height = 17, dpi = 600)
 
+################
 
-### Maps - Wealth
+# joining DHS dataset and spatial data
 
 if(gender=="female"){
   
@@ -247,11 +252,9 @@ if(gender=="female"){
 
 
 saveRDS(dat_ci_map, paste0("/Users/pearlanneante-testard/Dropbox/PhD/mapping/dat_sii-rii_linear_map_latest2",gender,".rds"))
-
 #saveRDS(dat_ci_map, paste0("/Users/pearlanneante-testard/Dropbox/PhD/mapping/dat_sii-rii_linear_map2_HIVprev",gender,".rds"))
  
-
-
+  
 if(gender=="female"){
   
   #dat_adm <- st_read("/Users/pearlanneante-testard/Dropbox/PhD/mapping/SHP/union/DHS_adm.shp") %>%
@@ -290,21 +293,15 @@ saveRDS(dat_adm, paste0("/Users/pearlanneante-testard/Dropbox/PhD/mapping/dat_si
             #rii_val = median(rii, na.rm = T))
             #sd_rii = sd(rii, na.rm = T)) 
             #rii_low = median(rii_low, na.rm = T),
-            #rii_up = median(rii_up, na.rm = T)) %>%
-
-
-f=dat_adm %>%
-  dplyr::select(country,sii, rii) 
-f <- f[-which(duplicated(f)), ]
-
-#write.csv(dat_ci_adm, paste0("/Users/pearlanneante-testard/Dropbox/PhD/mapping/",gender,"_countrylevel.csv"))
+            #rii_up = median(rii_up, na.rm = T)) 
 
 saveRDS(dat_ci_adm, paste0("/Users/pearlanneante-testard/Dropbox/PhD/mapping/",gender,"_dat_ci_adm_v3.rds"))
-
+#write.csv(dat_ci_adm, paste0("/Users/pearlanneante-testard/Dropbox/PhD/mapping/",gender,"_countrylevel.csv"))
 #d=read.csv("/Users/pearlanneante-testard/Dropbox/PhD/mapping/dat_mal_ineq_v3.csv")
 
-
-##### SII
+################
+  
+# mapping SII
 
 sPDF <- world %>%
   filter(continent == "Africa")
@@ -315,7 +312,9 @@ sPDF <- world %>%
                  #          'SN'='SN';'TD'='TD';'TG'='TG';'TZ'='TZ';'UG'='UG';'ZA'='ZA';
                    #        'ZM'='ZM';'ZW'='ZW'")
 
+# female
 
+# country level
 fs_val=ggplot() +
   geom_sf(data = sPDF, fill = "grey") + 
   geom_sf(data = dat_adm %>%
@@ -324,22 +323,13 @@ fs_val=ggplot() +
           #filter(log_sii != Inf & log_sii != -Inf), 
           aes(fill = sii),
           size = 0) +
-  #scale_fill_gradientn(
-    #colors=c("blue","white","red"),
-    #rescale(mini_map:maxi_map))+
-    #values=rescale(c(mini,0,maxi)),
-    #breaks=c(-3,-2.5,-2,-1.5,-1,-0.5,0,0.5,1.0,1.5,2.0))+ 
-    #limits=c(-2.60923,0.75139))+ #female
-    #name=paste0("SII,"," ",gender),
-    #rescale(c(mini,med,maxi)),
-    #limits=c(mini,maxi))+
   geom_sf(data = sPDF, fill = NA) +
   scale_fill_continuous_diverging(palette = "Blue-Red 3") +
   geom_sf(data = sPDF, fill = NA) +
   labs(fill = paste0("SII, ",gender)) +
   theme_bw()
 
-
+# region level
 fsii=ggplot() +
   geom_sf(data = map, fill = "grey") + 
   geom_sf(data = dat_ci_map, #%>%
@@ -348,28 +338,15 @@ fsii=ggplot() +
           #filter(log_sii != Inf & log_sii != -Inf), 
           aes(col = sii),
           size = 0) +
-  #scale_fill_gradientn(
-  #colors=c("blue","white","red"),
-  #rescale(mini_map:maxi_map))+
-  #values=rescale(c(mini,0,maxi)),
-  #breaks=c(-3,-2.5,-2,-1.5,-1,-0.5,0,0.5,1.0,1.5,2.0))+ 
-  #limits=c(-2.60923,0.75139))+ #female
-  #name=paste0("SII,"," ",gender),
-  #rescale(c(mini,med,maxi)),
-  #limits=c(mini,maxi))+
   geom_sf(data = map, fill = NA) +
   scale_colour_continuous_diverging(palette = "Blue-Red 3") +
   geom_sf(data = map, fill = NA) +
   labs(col = paste0("PSU SII, ",gender)) +
   theme_bw()
-  
-sf_1 <- plot_grid(fs_val, fsii,ncol = 2,
-                 labels = c("A", "B"),rel_widths = c(1, 1))
 
-ggsave(paste0("/Users/pearlanneante-testard/Dropbox/PhD/mapping/res/",ind,"HIVprev.jpg"),
-       units = "cm", width = 35, height = 17, dpi = 650, sf_1)
+# male
 
-
+# country level
 ms_val=ggplot() +
   geom_sf(data = sPDF, fill = "grey") + 
   geom_sf(data = dat_adm, # %>%
@@ -378,22 +355,13 @@ ms_val=ggplot() +
           #filter(log_sii != Inf & log_sii != -Inf), 
           aes(fill = sii),
           size = 0) +
-  #scale_fill_gradientn(
-  #colors=c("blue","white","red"),
-  #rescale(mini_map:maxi_map))+
-  #values=rescale(c(mini,0,maxi)),
-  #breaks=c(-3,-2.5,-2,-1.5,-1,-0.5,0,0.5,1.0,1.5,2.0))+ 
-  #limits=c(-2.60923,0.75139))+ #female
-  #name=paste0("SII,"," ",gender),
-  #rescale(c(mini,med,maxi)),
-  #limits=c(mini,maxi))+
   geom_sf(data = sPDF, fill = NA) +
   scale_fill_continuous_diverging(palette = "Blue-Red 3") +
   geom_sf(data = sPDF, fill = NA) +
   labs(fill = paste0("SII, ",gender)) +
   theme_bw()
 
-
+# region level
 msii=ggplot() +
   geom_sf(data = map, fill = "grey") + 
   geom_sf(data = dat_ci_map, #%>%
@@ -402,69 +370,36 @@ msii=ggplot() +
           #filter(log_sii != Inf & log_sii != -Inf), 
           aes(col = sii),
           size = 0) +
-  #scale_fill_gradientn(
-  #colors=c("blue","white","red"),
-  #rescale(mini_map:maxi_map))+
-  #values=rescale(c(mini,0,maxi)),
-  #breaks=c(-3,-2.5,-2,-1.5,-1,-0.5,0,0.5,1.0,1.5,2.0))+ 
-  #limits=c(-2.60923,0.75139))+ #female
-  #name=paste0("SII,"," ",gender),
-  #rescale(c(mini,med,maxi)),
-  #limits=c(mini,maxi))+
   geom_sf(data = map, fill = NA) +
   scale_colour_continuous_diverging(palette = "Blue-Red 3") +
   geom_sf(data = map, fill = NA) +
   labs(col = paste0("PSU SII, ",gender)) 
 
-sf9 <- plot_grid(fs_val, ms_val,ncol = 2,
-                 labels = c("A", "B"),rel_widths = c(1, 1))
-
-
-ind="sii"
-#ind="rii"
-lev="reg"
-
-ggsave(paste0("/Users/pearlanneante-testard/Dropbox/PhD/mapping/res/",ind,lev,"noBF-3.jpg"),
-       units = "cm", width = 35, height = 17, dpi = 650, sf9)
-
-ggsave(paste0("/Users/pearlanneante-testard/Dropbox/PhD/mapping/res/",ind,lev,"HIVprev.jpg"),
-       units = "cm", width = 35, height = 17, dpi = 650, sf9)
-
-
-
-
-#### RII
+# mapping RII
 
 source("/Users/pearlanneante-testard/Dropbox/Pearl - PhD project/mapping/log_noNaNs.R")
 
+# female
+
+# country level
 frii_val = ggplot() +
   geom_sf(data = sPDF, fill = "grey") +
-  #geom_sf(data = dat_ci_adm, aes(fill = rii_val),
-       #   size = 0) +
   geom_sf(data = dat_adm, #%>%
             #filter(!is.na(rii)) %>%
             #mutate(log_rii = transform_to_log_scale(rii)) %>%
             #filter(log_rii != Inf & log_rii != -Inf), 
           aes(fill = rii),
           size = 0) +
-  #scale_fill_gradientn(
-    #colours =c("blue","white","red"),
-    #values=rescale(c(transform_to_log_scale(min(dat_ci_adm$rii_val)),0,transform_to_log_scale(max(dat_ci_adm$rii_val)))))+
-    #values=rescale(c(-7,0,6)),
-    #limits=c(mini_rii,maxi_rii),
-           # 5,6))+ 
-    #breaks=c(-6,-5,-4,-3,-2,-1,0,1,2,3,4,5,6))+
   geom_sf(data = sPDF, fill = NA) + 
   scale_fill_continuous_diverging(palette = "Blue-Red 3") +
   geom_sf(data = sPDF, fill = NA) + 
   labs(fill = paste0("RII, ",gender)) +
   theme_bw()
 
-breaks = 10**(1:10)
-scale_y_log10(breaks = breaks, labels = comma(breaks))
+#breaks = 10**(1:10)
+#scale_y_log10(breaks = breaks, labels = comma(breaks))
 
-#frii_val+scale_x_continuous(trans='log10')
-
+# region level
 frii=ggplot() +
   geom_sf(data = map, fill = "grey") + 
   geom_sf(data = dat_ci_map %>%
@@ -473,21 +408,15 @@ frii=ggplot() +
             filter(log_rii != Inf & log_rii != -Inf), 
           aes(col = log_rii),
           size = 0) +
-  #scale_fill_gradientn(
-  #colors=c("blue","white","red"),
-  #rescale(mini_map:maxi_map))+
-  #values=rescale(c(mini,0,maxi)),
-  #breaks=c(-3,-2.5,-2,-1.5,-1,-0.5,0,0.5,1.0,1.5,2.0))+ 
-  #limits=c(-2.60923,0.75139))+ #female
-  #name=paste0("SII,"," ",gender),
-  #rescale(c(mini,med,maxi)),
-  #limits=c(mini,maxi))+
   geom_sf(data = map, fill = NA) +
   scale_colour_continuous_diverging(palette = "Blue-Red 3") +
   geom_sf(data = map, fill = NA) +
   labs(col = paste0("PSU log RII,\n",gender)) +
   theme_bw()
 
+# male
+
+# country level
 mrii_val = ggplot() +
   geom_sf(data = sPDF, fill = "grey") +
   #geom_sf(data = dat_ci_adm, aes(fill = rii_val),
@@ -498,20 +427,13 @@ mrii_val = ggplot() +
             filter(log_rii != Inf & log_rii != -Inf), 
           aes(fill = log_rii),
           size = 0) +
-  #scale_fill_gradientn(
-  #colours =c("blue","white","red"),
-  #values=rescale(c(transform_to_log_scale(min(dat_ci_adm$rii_val)),0,transform_to_log_scale(max(dat_ci_adm$rii_val)))))+
-  #values=rescale(c(-7,0,6)),
-  #limits=c(mini_rii,maxi_rii),
-  # 5,6))+ 
-  #breaks=c(-6,-5,-4,-3,-2,-1,0,1,2,3,4,5,6))+
   geom_sf(data = sPDF, fill = NA) + 
   scale_fill_continuous_diverging(palette = "Blue-Red 3") +
   geom_sf(data = sPDF, fill = NA) + 
   labs(fill = paste0("log RII,",gender)) +
   theme_bw()
 
-
+# region level
 mrii=ggplot() +
   geom_sf(data = sPDF, fill = "grey") +
   #geom_sf(data = dat_ci_adm, aes(fill = rii_val),
@@ -522,14 +444,6 @@ mrii=ggplot() +
           #filter(log_rii != Inf & log_rii != -Inf), 
           aes(fill = rii),
           size = 0) +
-  #coord_trans(x = "log10") +
-  #scale_fill_gradientn(
-  #colours =c("blue","white","red"),
-  #values=rescale(c(transform_to_log_scale(min(dat_ci_adm$rii_val)),0,transform_to_log_scale(max(dat_ci_adm$rii_val)))))+
-  #values=rescale(c(-7,0,6)),
-  #limits=c(mini_rii,maxi_rii),
-  # 5,6))+ 
-  #breaks=c(-6,-5,-4,-3,-2,-1,0,1,2,3,4,5,6))+
   geom_sf(data = sPDF, fill = NA) + 
   scale_fill_continuous_diverging(palette = "Blue-Red 3",trans = log10_trans()
                                   ) +
@@ -537,30 +451,13 @@ mrii=ggplot() +
   labs(fill = paste0("RII, ",gender)) +
   theme_bw()
 
-sf10 <- plot_grid(frii_val, mrii, ncol = 2,
-                  labels = c("C", "D"),rel_widths = c(1, 1))
-sf10
+
+###########
+# combining by gender, region
+
 
 ind="rii"
 lev="reg"
-
-ggsave(paste0("/Users/pearlanneante-testard/Dropbox/PhD/mapping/res/",ind,lev,"noBF-3.jpg"),
-       units = "cm", width = 35, height = 17, dpi = 650, sf10)
-
-sf11 <- plot_grid(sf9, sf10, nrow=2,rel_widths = c(1, 1))
-
-ind="sii-rii"
-lev="reg"
-
-ggsave(paste0("/Users/pearlanneante-testard/Dropbox/PhD/mapping/res/",ind,lev,"noBF-4.jpg"),
-       units = "cm", width = 35, height = 17, dpi = 650, sf11)
-
-ggsave(paste0("/Users/pearlanneante-testard/Dropbox/PhD/mapping/res/",ind,lev,"HIVprev.jpg"),
-       units = "cm", width = 35, height = 17, dpi = 650, sf11)
-
-
-###########
-###########combining by gender region
 
 fem_reg_sii_rii <- plot_grid(fs_val, frii_val,ncol = 2,
                              labels = c("A", "B"))
@@ -574,7 +471,7 @@ ggsave(paste0("/Users/pearlanneante-testard/Dropbox/PhD/mapping/res/fm_reg_sii_r
        units = "cm", width = 40, height = 20, dpi = 650, fm_reg_sii_rii)
 
 
-### PSU
+# combining by gender, PSU
 
 fem_psu_sii_rii <- plot_grid(fsii, frii,ncol = 2,
                              labels = c("A", "B"))
@@ -586,10 +483,11 @@ fm_psu_sii_rii <- plot_grid(fem_psu_sii_rii, male_psu_sii_rii, nrow=2)
 
 ggsave(paste0("/Users/pearlanneante-testard/Dropbox/PhD/mapping/res/fm_psu_sii_rii.jpg"),
        units = "cm", width = 40, height = 20, dpi = 650, fm_psu_sii_rii)
-######
-#####
-#####
 
+
+###########
+
+# mapping HIV testing uptake
 
 fprev_val=ggplot() +
   geom_sf(data = sPDF, fill = "grey") + 
@@ -597,11 +495,6 @@ fprev_val=ggplot() +
             mutate(prev_perc = prev*100),
           aes(fill = prev_perc),
           size = 0) +
-  #scale_fill_gradientn(
-    #colors=c()+
-    #rescale(mini_map:maxi_map))+
-    #values=rescale(c(mini,med,maxi)))+ 
-    #breaks=c(0,20,40,60,80))+
   geom_sf(data = sPDF, fill = NA) + 
   scale_fill_continuous_diverging(palette = "Vik", rev = T,
                                   breaks=c(0,20,40,60,80)) +
@@ -623,13 +516,6 @@ mprev_val=ggplot() +
   geom_sf(data = sPDF, fill = NA) + 
   scale_fill_continuous_diverging(palette = "Vik", rev = T)+
                                   #breaks=c(0,20,40,60,80))+
-  #scale_fill_gradientn(
-  #colours =c(low = muted("blue"),mid = "white",high = "blue"),
-  #values=rescale(c(transform_to_log_scale(min(dat_ci_adm$rii_val)),0,transform_to_log_scale(max(dat_ci_adm$rii_val)))))+
-  #values=rescale(c(0,40,80)),
-  #limits=c(mini_rii,maxi_rii),
-  # 5,6))+ 
-  #breaks=c(0,20,40,60,80), labels=c(0,20,40,60,80))+
   labs(fill = paste0("Recent HIV testing\nuptake (%), ",gender)) +
   theme_bw()
 mprev_val
@@ -643,8 +529,7 @@ ggsave(paste0("/Users/pearlanneante-testard/Dropbox/PhD/mapping/res/",ind,"3.jpg
 
 
 
-#####
-
+# mapping HIV prevalence
 
 fhivprev_val=ggplot() +
   geom_sf(data = sPDF, fill = "grey") + 
@@ -653,10 +538,6 @@ fhivprev_val=ggplot() +
             mutate(HIVprev_perc = HIVprev*100),
             aes(fill = HIVprev_perc),
             size = 0) +
-  #scale_fill_gradientn(
-   # colors=c("yellow","orange","red"))+
-  #rescale(mini_map:maxi_map))+
-  #values=rescale(c(mini,med,maxi)))+ 
   geom_sf(data = sPDF, fill = NA) + 
   scale_fill_continuous_diverging(palette = "Green-Orange") +
   labs(fill = paste0("Weighted HIV \nprevalence (%), ",gender)) +
@@ -670,23 +551,25 @@ mhivprev_val=ggplot() +
             mutate(HIVprev_perc = HIVprev*100),
           aes(fill = HIVprev_perc),
           size = 0) +
-  #scale_fill_gradientn(
-  # colors=c("yellow","orange","red"))+
-  #rescale(mini_map:maxi_map))+
-  #values=rescale(c(mini,med,maxi)))+ 
   geom_sf(data = sPDF, fill = NA) + 
   scale_fill_continuous_diverging(palette = "Green-Orange") +
   labs(fill = paste0("Weighted HIV \nprevalence (%), ",gender)) +
   theme_bw()
 mhivprev_val
 
+###########
+
+# joining HIV prevalence for female and male
 pr11 <- plot_grid(fhivprev_val, mhivprev_val, ncol = 2,
                   labels = c("A", "B"))
 
+# saving 
 ind="hivprev"
 ggsave(paste0("/Users/pearlanneante-testard/Dropbox/PhD/mapping/res/",ind,"3.jpg"),
        units = "cm", width = 35, height = 17, dpi = 650, pr11)
 
+
+# joining HIV testing uptake for female and male
 pr12 <- plot_grid(pr11, pr10, nrow = 2)
 
 ind="hivprev-hivtest"
