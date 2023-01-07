@@ -20,9 +20,6 @@ h_ineq <- function(dat, var_soc, var_outcome, clust, full = F, scale = 1) {
     mutate(cum_w=cumsum(indiv), pt=cum_w/sum(indiv), cum_c=cumsum(cases), Lt=cum_c/sum(cases),
            con_i = (pt*lead(Lt, default=0))-(lead(pt, default=0)*Lt))
   
-  # CI: FROM LOW TO HIGH SES =============================================
-  c_index <- sum(c_index.d$con_i)
-  
   # SII: FROM LOW TO HIGH SES =============================================
   ##### for HIV testing
   c_index.d2 <- dat %>% 
@@ -137,7 +134,7 @@ h_ineq <- function(dat, var_soc, var_outcome, clust, full = F, scale = 1) {
   #(RII <- p.low/p.high)
   
   # output =============================================
-  dat_out <- data.frame(c_index = c_index, sii = SII, #sii_low = SII_low, sii_up = SII_up,
+  dat_out <- data.frame(sii = SII, #sii_low = SII_low, sii_up = SII_up,
                         rii = RII)#, rii_low = RII_low, rii_up = RII_up)
 
   out <- dat_out
