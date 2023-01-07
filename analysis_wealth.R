@@ -2,7 +2,7 @@
 ################
 ## This script calculates inequality indicators (RII and SII) and maps them
 ## Author: Pearl Ante-Testard
-## email: pearl.ante@ucsf.edu
+## email: pearlannemante@gmail.com/ pearl.ante@ucsf.edu
 ###############
 
 # cleans environment
