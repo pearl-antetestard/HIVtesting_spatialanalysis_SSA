@@ -2,7 +2,7 @@
 ################
 ## This script conducts Getis-Ord G* statistics and outputs maps
 ## Author: Pearl Ante-Testard
-## email: pearl.ante@ucsf.edu
+## email: pearlannemante@gmail.com/ pearl.ante@ucsf.edu
 ###############
 
 # cleans environment
