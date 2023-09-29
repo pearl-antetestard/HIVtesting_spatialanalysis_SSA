@@ -1,8 +1,8 @@
 ## Investigating inequalities in HIV testing in sub-Saharan Africa: insights from a spatial analysis of 25 countries
 
-##### Pearl Anne Ante-Testard, Gabriel Carrasco-Escobar, Tarik Benmarhnia, Laura Temime, Kévin Jean
+Pearl Anne Ante-Testard, Gabriel Carrasco-Escobar, Tarik Benmarhnia, Laura Temime, Kévin Jean
 
-##### Corresponding author: Pearl Anne Ante-Testard (pearlannemante@gmail.com/ pearl.ante@ucsf.edu)
+Corresponding author: Pearl Anne Ante-Testard (pearlannemante@gmail.com/ pearl.ante@ucsf.edu)
 
 ## Systems Requirement
 All analyses were running using R software version 4.2.1 on Mac OSX Ventura using the RStudio IDE (https://www.rstudio.com).
