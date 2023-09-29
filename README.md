@@ -35,7 +35,7 @@ This calculates and maps the relative index of inequality and slope index of ine
 ##### globalG.R
 Assessed the global G* statistic before the hotspot/coldspot spatial analysis.
 ##### hivtest_ineq_fun_2.R
-Function needed in analysis_wealth.R to calculate the RII and SII at the national and province level.
+Function needed in analysis_wealth_reg.R and analysis_wealth_national.R to calculate the RII and SII at the national and province level.
 ##### hivtest_ineq_linear_clust_fun.R
 Function needed in analysis_wealth.R to calculate the RII and SII at the cluster level.
 ##### spatialanalysis2.R
