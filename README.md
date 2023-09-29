@@ -6,6 +6,8 @@
 
 ## Main R files
 
+##### analysis.Rproj
+The R project for this study.
 ##### analysis_wealth.R
 This calculates and maps the relative index of inequality and slope index of inequality at the cluster level.
 ##### analysis_wealth_reg.R
