@@ -4,6 +4,24 @@
 
 ##### Corresponding author: Pearl Anne Ante-Testard (pearlannemante@gmail.com/ pearl.ante@ucsf.edu)
 
+## Systems Requirement
+All analyses were running using R software version 4.2.1 on Mac OSX Ventura using the RStudio IDE (https://www.rstudio.com).
+
+> sessionInfo()
+
+R version 4.2.1 (2022-06-23)
+
+Platform: x86_64-apple-darwin17.0 (64-bit)
+
+Running under: macOS Ventura 13.4.1
+
+## Installation Guide
+You can download and install R from CRAN: https://cran.r-project.org
+
+You can download and install RStudio from their website: https://www.rstudio.com
+
+The installation time should be < 10 minutes total on a typical desktop computer.
+
 ## Main R files
 
 ##### analysis.Rproj
